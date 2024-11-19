@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 )
 
 var (
@@ -216,6 +217,20 @@ func structs() {
 	// fmt.Println(p)
 }
 
+func numeros() {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%d ", i)
+		time.Sleep(time.Millisecond * 150)
+	}
+}
+
+func letras() {
+	for l := 'a'; l < 'j'; l++ {
+		fmt.Printf("%c ", l)
+		time.Sleep(time.Millisecond * 230)
+	}
+}
+
 func main() {
 	// hello("Filipe Dervelan")
 
@@ -237,21 +252,27 @@ func main() {
 	// maps()
 	// structs()
 
-	pf := PessoaFisica{
-		Pessoa{Nome: "Filipe", Idade: 19, Status: true},
-		"Dervelan",
-		"000.000.000-00",
-	}	
+	// pf := PessoaFisica{
+	// 	Pessoa{Nome: "Filipe", Idade: 19, Status: true},
+	// 	"Dervelan",
+	// 	"000.000.000-00",
+	// }	
 
-	show(pf)
+	// show(pf)
 	
-	fmt.Println()
+	// fmt.Println()
 
-	pj := PessoaJuridica{
-		Pessoa{Nome: "Filipe", Idade: 19, Status: true},
-		"Dervelan LTDA",
-		"00.000.000/0000-00",
-	}
+	// pj := PessoaJuridica{
+	// 	Pessoa{Nome: "Filipe", Idade: 19, Status: true},
+	// 	"Dervelan LTDA",
+	// 	"00.000.000/0000-00",
+	// }
 
-	show(pj)
+	// show(pj)
+
+	// below i will use go routines
+	go numeros()
+	go letras()
+	time.Sleep(3 * time.Second)
+	fmt.Println("Fim da execução")
 }
