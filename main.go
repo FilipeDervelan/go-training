@@ -120,16 +120,16 @@ func looping() {
 }
 
 func slices() {
-	// nomes := []string{"Filipe", "Mirela", "André", "Sara"}
-	// fmt.Println(nomes, len(nomes), cap(nomes))
+	nomes := []string{"Filipe", "Mirela", "André", "Sara"}
+	fmt.Println(nomes, len(nomes), cap(nomes))
 
-	// nomes = append(nomes, "Ana")
-	// fmt.Println(nomes, len(nomes), cap(nomes))
+	nomes = append(nomes, "Ana")
+	fmt.Println(nomes, len(nomes), cap(nomes))
 
-	// nomes = append(nomes, "Sergio")
-	// fmt.Println(nomes, len(nomes), cap(nomes))
+	nomes = append(nomes, "Sergio")
+	fmt.Println(nomes, len(nomes), cap(nomes))
 
-	// nomes := make([]string, 10, 20)
+	nomes = make([]string, 10, 20)
 }
 
 func maps() {
@@ -146,11 +146,43 @@ func maps() {
 	fmt.Println(val, ok)
 }
 
+type Document interface {
+	Doc() string
+}
+
 type Pessoa struct {
 	Nome string
-	Sobrenome string
 	Idade uint8
 	Status bool
+}
+
+type PessoaFisica struct {
+	Pessoa
+	Sobrenome string
+	cpf string
+}
+
+func (pf PessoaFisica) Doc() string {
+	return fmt.Sprintf("meu cpf é: %s", pf.cpf)
+}
+
+type PessoaJuridica struct {
+	Pessoa
+	RazaoSocial string
+	cnpj string
+}
+
+func (pj PessoaJuridica) Doc() string {
+	return fmt.Sprintf("meu cnpj é: %s", pj.cnpj)
+}
+
+func (p Pessoa) String() string  {
+	return fmt.Sprintf("Olá, meu nome é %s e eu tenho %d anos.", p.Nome, p.Idade)
+}
+
+func show(d Document) {
+	fmt.Println(d)
+	fmt.Println(d.Doc())
 }
 
 func structs() {
@@ -168,11 +200,9 @@ func structs() {
 	// }
 
 	// Não recomendado, porque se a struct for alterada não funcionará.
-	p := Pessoa {"Filipe", "Dervelan", 16, true}
+	// p := Pessoa {"Filipe", "Dervelan", 16, true}
 
-	fmt.Println(p)
-	fmt.Println(p.Nome)
-	fmt.Println(p.Idade)
+	// fmt.Println(p)
 }
 
 func main() {
@@ -194,5 +224,23 @@ func main() {
 
 	// slices()
 	// maps()
-	structs()
+	// structs()
+
+	pf := PessoaFisica{
+		Pessoa{Nome: "Filipe", Idade: 19, Status: true},
+		"Dervelan",
+		"000.000.000-00",
+	}	
+
+	show(pf)
+	
+	fmt.Println()
+
+	pj := PessoaJuridica{
+		Pessoa{Nome: "Filipe", Idade: 19, Status: true},
+		"Dervelan LTDA",
+		"00.000.000/0000-00",
+	}
+
+	show(pj)
 }
