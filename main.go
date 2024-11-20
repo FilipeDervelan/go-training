@@ -198,11 +198,11 @@ func show(d Document) {
 }
 
 func structs() {
-	// var p Pessoa
-	// p.Nome = "Filipe"
+	var p Pessoa
+	p.Nome = "Filipe"
 	// p.Sobrenome = "Dervelan"
-	// p.Idade = 19
-	// p.Status = true
+	p.Idade = 19
+	p.Status = true
 
 	// p := Pessoa {
 	// 	Nome: "Filipe",
@@ -214,21 +214,75 @@ func structs() {
 	// Não recomendado, porque se a struct for alterada não funcionará.
 	// p := Pessoa {"Filipe", "Dervelan", 16, true}
 
-	// fmt.Println(p)
+	fmt.Println(p)
 }
 
-func numeros() {
+// Quando o channel fica tipado da maneira abaixo, significa que a função apenas
+// faz a escrita no channel e não a leitura
+func numeros(done chan <- bool) {
 	for i := 0; i < 10; i++ {
 		fmt.Printf("%d ", i)
 		time.Sleep(time.Millisecond * 150)
 	}
+
+	// Escrevendo no channel: true
+	done <- true
 }
 
-func letras() {
+// Quando o channel fica tipado da maneira abaixo, significa que a função apenas
+// faz a escrita no channel e não a leitura
+func letras(done chan <- bool) {
 	for l := 'a'; l < 'j'; l++ {
 		fmt.Printf("%c ", l)
 		time.Sleep(time.Millisecond * 230)
 	}
+
+	// Escrevendo no channel: true
+	done <- true
+}
+
+func goRoutinesAndChannels() {
+	// Quando estamos apontando a flecha para o Channel, significa que estamos
+	// escrevendo algo nele
+	// E quando estamos colocando a flecha e depois o channel, significa que
+	// estamos lendo ele
+
+	cn := make(chan bool)
+	cl := make(chan bool)
+
+	go numeros(cn)
+	go letras(cl)
+	
+	// Lendo o channel
+	<-cn
+	<-cl
+
+	fmt.Println("Fim da execução")
+}
+
+func numerosBuffer(n chan <- int) {
+	for i := 0; i < 10; i++ {
+		n <- i
+		fmt.Printf("Escrito no channel: %d\n", i)
+		time.Sleep(time.Millisecond * 90)
+	}
+	fmt.Println("Fim da escrita")
+	close(n)
+}
+
+func goRoutinesAndChannelsBuffer() {
+	cn := make(chan int, 3)
+	go numerosBuffer(cn)
+	
+	for v := range cn {
+		fmt.Printf("lido do channel: %d\n", v)
+		time.Sleep(time.Millisecond * 180)
+	}
+
+	// Lendo o channel
+	<-cn
+
+	fmt.Println("Fim da execução")
 }
 
 func main() {
@@ -271,8 +325,7 @@ func main() {
 	// show(pj)
 
 	// below i will use go routines
-	go numeros()
-	go letras()
-	time.Sleep(3 * time.Second)
-	fmt.Println("Fim da execução")
+	// goRoutinesAndChannels()
+
+	goRoutinesAndChannelsBuffer()
 }
